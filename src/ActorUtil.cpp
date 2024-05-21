@@ -96,10 +96,8 @@ namespace SKSEUtil
 
 		std::int32_t count = 0;
 		RE::TESContainer* ref_cont = cont->GetContainer();
-		for (std::uint32_t i = 0u; i < ref_cont->numContainerObjects; i++) {
+		for (std::uint32_t i = 0u; i < ref_cont->numContainerObjects; i++)
 			count += ApplyItemCount(out, ref_cont->containerObjects[i]->obj->As<TESForm>(), ref_cont->containerObjects[i]->count);
-			return true;
-		}
 
 		RE::ExtraContainerChanges* pContainerChanges = static_cast<RE::ExtraContainerChanges*>(cont->extraList.GetByType(RE::ExtraDataType::kContainerChanges));
 		if (pContainerChanges) {
