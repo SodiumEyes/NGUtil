@@ -1,8 +1,10 @@
 #include "SKSEUtil/FormIDUtil.h"
 #include "SKSEUtil/MathUtil.h"
 #include "SKSEUtil/StringUtil.h"
+#include "SKSE/SKSE.h"
 
 using namespace RE;
+using namespace SKSE;
 
 namespace SKSEUtil {
 
@@ -130,6 +132,10 @@ namespace SKSEUtil {
 		if (file)
 			return file->fileName;
 		return std::string();
+	}
+
+	void lookupFormError(RE::FormID form_id, const std::string& mod_name, const std::string& error) {
+		SKSE::log::warn("Form Lookup Error: {}:{} :: {}", mod_name, SKSEUtil::hexToString(form_id), error);
 	}
 
 }

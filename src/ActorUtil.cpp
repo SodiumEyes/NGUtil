@@ -387,6 +387,12 @@ namespace SKSEUtil
 	}
 
 	//
+	RE::Actor* GetKiller(RE::Actor* a) {
+		if (a)
+			return a->GetActorRuntimeData().myKiller.get().get();
+		return NULL;
+	}
+
 	bool HasLineOfSight(RE::Actor* a, RE::TESObjectREFR* target, bool* a_arg2) {
 		if (a_arg2)
 			return a->HasLineOfSight(target, *a_arg2);

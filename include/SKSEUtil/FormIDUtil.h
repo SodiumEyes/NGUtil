@@ -2,6 +2,7 @@
 
 #include "json/json.h"
 #include <RE/Skyrim.h>
+#include <SKSE/SKSE.h>
 
 namespace SKSEUtil
 {
@@ -19,4 +20,24 @@ namespace SKSEUtil
 	RE::TESFile* getFileByName(const std::string& name);
 	RE::TESFile* getFormIdFile(RE::FormID form_id);
 	std::string getFormIdFilename(RE::FormID form_id);
+
+	void lookupFormError(RE::FormID form_id, const std::string& mod_name, const std::string& error);
+
+	template <class FormT>
+	bool LookupForm(RE::FormID form_id, const std::string& mod_name, FormT*& out, bool allow_null=false)
+	{
+		RE::TESForm* res = RE::TESDataHandler::GetSingleton()->LookupForm(form_id, mod_name);
+		if (res) {
+			out = res->As<FormT>();
+			if (!out) {
+				lookupFormError(form_id, mod_name, "Not Found");
+				return false;
+			}
+			return true;
+		}
+		else if (!allow_null)
+			lookupFormError(form_id, mod_name, "Not Found");
+
+		return false;
+	}
 };

@@ -211,4 +211,34 @@ namespace SKSEUtil
 		return false;
 	}
 
+	bool serializeJsonToRecord(SKSE::SerializationInterface* serde, const Json::Value& json_value) {
+		Json::FastWriter writer;
+		std::string value_str = writer.write(json_value);
+
+		//Write size of string
+		std::string::size_type value_str_size = std::strlen(value_str.c_str());
+		serde->WriteRecordData(&value_str_size, sizeof(value_str_size));
+
+		//Write string
+		serde->WriteRecordData(value_str.c_str(), value_str_size);
+
+		return true;
+	}
+
+	bool deserializeJsonFromRecord(SKSE::SerializationInterface* serde, Json::Value& json_value_out) {
+		std::string::size_type value_str_size = 0u;
+		serde->ReadRecordData(&value_str_size, sizeof(value_str_size));
+		char* value_c_str = new char[value_str_size + 1];
+		serde->ReadRecordData(value_c_str, value_str_size);
+		value_c_str[value_str_size] = '\0';
+
+		if (value_str_size == 0u)
+			return false;
+
+		Json::Reader reader;
+		bool result = reader.parse(value_c_str, json_value_out);
+
+		delete value_c_str;
+		return result;
+	}
 }

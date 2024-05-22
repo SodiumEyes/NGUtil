@@ -2,6 +2,7 @@
 
 #include "json/json.h"
 #include <RE/Skyrim.h>
+#include <SKSE/SKSE.h>
 
 namespace SKSEUtil
 {
@@ -15,4 +16,7 @@ namespace SKSEUtil
 	bool isValueInValue(const Json::Value& val1, const Json::Value& val2);
 
 	bool tryDeserializePoint3(const Json::Value& value, RE::NiPoint3& out);
+
+	bool serializeJsonToRecord(SKSE::SerializationInterface* serde, const Json::Value& json_value);
+	bool deserializeJsonFromRecord(SKSE::SerializationInterface* serde, Json::Value& json_value_out);
 }

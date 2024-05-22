@@ -14,4 +14,11 @@ namespace SKSEUtil
 	bool nonCaseSensitiveEquals(const std::string& str1, const std::string& str2);
 	std::string stripEnds(const std::string& str, char c);
 	unsigned int splitString(const std::string& str, char delim, std::vector<std::string>& out);
+
+	template <typename Type>
+	bool stringToValue(const std::string& str, Type& dest) {
+		std::istringstream stream(str);
+		stream >> dest;
+		return !stream.fail();
+	}
 };
