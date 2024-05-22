@@ -199,6 +199,15 @@ namespace SKSEUtil
 		return false;
 	}
 
+	void jsonValueToString(const Json::Value& json_value, std::string& out) {
+		if (json_value.isString())
+			out = json_value.asCString();
+		else {
+			Json::FastWriter writer;
+			out = stripEnds(writer.write(json_value),'\n');
+		}
+	}
+
 	bool tryDeserializePoint3(const Json::Value& value, RE::NiPoint3& out) {
 		if (value.isArray() && value.size() == 3u) {
 			if (value[0].isNumeric() && value[1].isNumeric() && value[2].isNumeric()) {

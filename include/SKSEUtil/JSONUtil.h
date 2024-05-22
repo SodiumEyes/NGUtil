@@ -14,6 +14,7 @@ namespace SKSEUtil
 	int compareUIntValue(unsigned int compare, const Json::Value& comparing);
 
 	bool isValueInValue(const Json::Value& val1, const Json::Value& val2);
+	void jsonValueToString(const Json::Value& json_value, std::string& out);
 
 	bool tryDeserializePoint3(const Json::Value& value, RE::NiPoint3& out);
 
