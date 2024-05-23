@@ -3,6 +3,113 @@
 
 namespace SKSEUtil
 {
+	bool tryGetFloat(const Json::Value& value, float& dest) {
+		switch (value.type()) {
+		case Json::intValue:
+			dest = static_cast<float>(value.asInt());
+			return true;
+
+		case Json::uintValue:
+			dest = static_cast<float>(value.asUInt());
+			return true;
+
+		case Json::realValue:
+			dest = value.asFloat();
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	bool tryGetInt(const Json::Value& value, int& dest) {
+		switch (value.type()) {
+		case Json::intValue:
+			dest = value.asInt();
+			return true;
+
+		case Json::uintValue:
+			dest = static_cast<int>(value.asUInt());
+			return true;
+
+		case Json::realValue:
+			dest = static_cast<int>(value.asFloat());
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	bool tryGetUInt(const Json::Value& value, unsigned int& dest) {
+		switch (value.type()) {
+		case Json::intValue:
+			dest = static_cast<unsigned int>(value.asInt());
+			return true;
+
+		case Json::uintValue:
+			dest = value.asUInt();
+			return true;
+
+		case Json::realValue:
+			dest = static_cast<unsigned int>(value.asFloat());
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	bool tryGetShort(const Json::Value& value, short& dest) {
+		switch (value.type()) {
+		case Json::intValue:
+			dest = static_cast<short>(value.asInt());
+			return true;
+
+		case Json::uintValue:
+			dest = static_cast<short>(value.asUInt());
+			return true;
+
+		case Json::realValue:
+			dest = static_cast<short>(value.asFloat());
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
+	bool tryGetString(const Json::Value& value, std::string& dest) {
+		if (value.isString()) {
+			dest = value.asCString();
+			return true;
+		}
+		return false;
+	}
+
+	bool tryGetBool(const Json::Value& value, bool& dest) {
+		switch (value.type()) {
+		case Json::booleanValue:
+			dest = value.asBool();
+			return true;
+
+		case Json::intValue:
+			dest = value.asInt() != 0;
+			return true;
+
+		case Json::uintValue:
+			dest = value.asInt() != 0;
+			return true;
+
+		case Json::realValue:
+			dest = value.asFloat() != 0.0f;
+			return true;
+
+		default:
+			return false;
+		}
+	}
+
 	int compareJsonValues(const Json::Value& val1, const Json::Value& val2) {
 		switch (val1.type()) {
 		case Json::stringValue:

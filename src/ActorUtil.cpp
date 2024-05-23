@@ -45,14 +45,14 @@ namespace SKSEUtil
 				it->second += delta;
 		}
 	}
-	
+
 	void addEquipAction(RE::TESForm* form, bool equip, EquipActionMap* action_map, FormSet* worn_forms) {
 		if (!form)
 			return;
 
 		if (action_map)
 			(*action_map)[form] = equip;
-		
+
 		if (worn_forms) {
 			if (equip)
 				worn_forms->insert(form);
@@ -168,7 +168,7 @@ namespace SKSEUtil
 
 		cont->RemoveItem(form->As<TESBoundObject>(), count, RE::ITEM_REMOVE_REASON::kRemove, NULL, NULL);
 		if (item_counts)
-			(*item_counts)[form] = std::max(GetItemCount(*item_counts, form)-count, 0);
+			(*item_counts)[form] = std::max(GetItemCount(*item_counts, form) - count, 0);
 	}
 
 	//Equips
@@ -217,7 +217,7 @@ namespace SKSEUtil
 			keywords_out->insert(form->keywords[i]);
 		}
 	}
-	
+
 	//Factions
 
 	int8_t GetFactionRank(RE::Actor* a, TESFaction* faction) {
@@ -234,7 +234,7 @@ namespace SKSEUtil
 			if (a->GetActorBase()->factions[i].faction == faction)
 				return a->GetActorBase()->factions[i].rank;
 		}
-		
+
 		return -2;
 	}
 
@@ -258,7 +258,8 @@ namespace SKSEUtil
 					if (change.rank != rank) {
 						change.rank = rank;
 						return true;
-					} else
+					}
+					else
 						return false;
 				}
 			}
@@ -321,7 +322,7 @@ namespace SKSEUtil
 			if (a->GetActorBase()->factions[i].faction)
 				(*faction_ranks_out)[a->GetActorBase()->factions[i].faction] = a->GetActorBase()->factions[i].rank;
 		}
-		
+
 		auto factionChanges = a->extraList.GetByType<ExtraFactionChanges>();
 		if (factionChanges) {
 			for (auto& change : factionChanges->factionChanges) {
@@ -374,7 +375,7 @@ namespace SKSEUtil
 			return 0;
 		}
 	}
-	
+
 	//Skeleton
 	RE::BSFixedString* GetActorSkeleton(RE::Actor* a) {
 		if (!a)
@@ -386,9 +387,25 @@ namespace SKSEUtil
 		return &a->GetRace()->skeletonModels[gender_index].model;
 	}
 
+	//Actor Values
+	float GetActorValueFraction(RE::Actor* a, RE::ActorValue av, bool relative_to_base) {
+		if (!a || av == RE::ActorValue::kNone)
+			return 0.0f;
+
+		float base;
+		if (relative_to_base)
+			base = a->AsActorValueOwner()->GetBaseActorValue(av);
+		else
+			base = a->AsActorValueOwner()->GetPermanentActorValue(av);
+
+		if (base == 0.0f)
+			return 0.0f;
+		return a->AsActorValueOwner()->GetActorValue(av) / base;
+	}
+
 	//
 	RE::Actor* GetKiller(RE::Actor* a) {
-		if (a)
+		if (a && a->GetActorRuntimeData().myKiller)
 			return a->GetActorRuntimeData().myKiller.get().get();
 		return NULL;
 	}

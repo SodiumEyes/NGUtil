@@ -40,4 +40,28 @@ namespace SKSEUtil
 
 		return false;
 	}
+
+	template <class FormT>
+	bool LookupSaveJsonForm(SKSE::SerializationInterface* serde, const Json::Value& form_id_json, FormT*& form_out) {
+		if (!form_id_json.isIntegral()) {
+			form_out = NULL;
+			return false;
+		}
+
+		RE::FormID form_id = 0u;
+		if (!serde->ResolveFormID(static_cast<RE::FormID>(form_id_json.asUInt()), form_id)) {
+			form_out = NULL;
+			return false;
+		}
+
+		RE::TESForm* form = RE::TESForm::LookupByID(form_id);
+		if (form) {
+			form_out = form->As<FormT>();
+			return form_out != NULL;
+		}
+		else {
+			form_out = NULL;
+			return false;
+		}
+	}
 };

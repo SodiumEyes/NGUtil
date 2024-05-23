@@ -6,6 +6,13 @@
 
 namespace SKSEUtil
 {
+	bool tryGetFloat(const Json::Value& value, float& dest);
+	bool tryGetInt(const Json::Value& value, int& dest);
+	bool tryGetUInt(const Json::Value& value, unsigned int& dest);
+	bool tryGetShort(const Json::Value& value, short& dest);
+	bool tryGetString(const Json::Value& value, std::string& dest);
+	bool tryGetBool(const Json::Value& value, bool& dest);
+
 	int compareJsonValues(const Json::Value& val1, const Json::Value& val2);
 	int compareStringValue(const std::string& compare, const Json::Value& comparing);
 	int compareBoolValue(bool compare, const Json::Value& comparing);

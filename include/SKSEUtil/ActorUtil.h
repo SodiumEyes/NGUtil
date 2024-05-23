@@ -63,6 +63,9 @@ namespace SKSEUtil
 	//Skeleton
 	RE::BSFixedString* GetActorSkeleton(RE::Actor* a);
 
+	//Actor Values
+	float GetActorValueFraction(RE::Actor* a, RE::ActorValue av, bool relative_to_base = false);
+
 	//
 	RE::Actor* GetKiller(RE::Actor* a);
 	bool HasLineOfSight(RE::Actor* a, RE::TESObjectREFR* target, bool* a_arg2 = NULL);
