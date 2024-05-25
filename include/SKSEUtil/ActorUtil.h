@@ -7,6 +7,7 @@ namespace SKSEUtil
 	RE::TESObjectARMO* GetWornInSlot(RE::Actor* thisActor, int32_t slot);
 	const RE::FormID PlayerBaseFormID = 0x7;
 	const RE::FormID PlayerRefFormID = 0x14;
+	const RE::FormID GoldFormID = 0xF;
 
 	//Inventory State
 

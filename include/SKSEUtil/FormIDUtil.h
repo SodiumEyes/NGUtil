@@ -12,8 +12,8 @@ namespace SKSEUtil
 	void serializeFormID(RE::FormID form_id, Json::Value& json_value_out);
 	bool deserializeFormID(const Json::Value& json_value, RE::FormID& form_id_out, std::string& mod_name_out);
 	bool deserializeFormIDString(const std::string& str, RE::FormID& form_id_out, std::string& mod_name_out);
-	RE::TESForm* tryLookupFormIdJson(const Json::Value& json_value);
-	RE::TESForm* tryLookupFormIdString(const std::string& str);
+	RE::TESForm* tryLookupFormIdJson(const Json::Value& json_value, bool try_editor_id = false);
+	RE::TESForm* tryLookupFormIdString(const std::string& str, bool try_editor_id=false);
 
 	RE::FormID trimFileFromFormID(RE::FormID form_id, bool light_plugin=false);
 
@@ -49,7 +49,9 @@ namespace SKSEUtil
 		}
 
 		RE::FormID form_id = 0u;
-		if (!serde->ResolveFormID(static_cast<RE::FormID>(form_id_json.asUInt()), form_id)) {
+		if (!serde)
+			form_id = form_id_json.asUInt();
+		else if (!serde->ResolveFormID(static_cast<RE::FormID>(form_id_json.asUInt()), form_id)) {
 			form_out = NULL;
 			return false;
 		}
@@ -64,4 +66,22 @@ namespace SKSEUtil
 			return false;
 		}
 	}
+
+	//FormID Cooldown Map
+	struct FormIDCooldownMap {
+		typedef std::map<RE::FormID, float> MapType;
+		MapType map;
+		float cooldown;
+
+		FormIDCooldownMap();
+		bool empty() const;
+		
+		bool applyCooldown(RE::FormID form_id, float time);
+		bool isInCooldown(RE::FormID form_id, float time);
+		std::size_t clean(float time);
+
+		void serializeJson(SKSE::SerializationInterface* serde, Json::Value& json_value);
+		bool deserializeJson(SKSE::SerializationInterface* serde, const Json::Value& json_value);
+	};
+	
 };

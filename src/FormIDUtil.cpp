@@ -77,19 +77,24 @@ namespace SKSEUtil {
 		return false;
 	}
 
-	RE::TESForm* tryLookupFormIdJson(const Json::Value& json_value) {
+	RE::TESForm* tryLookupFormIdJson(const Json::Value& json_value, bool try_editor_id) {
 		RE::FormID form_id;
 		std::string mod_name;
 		if (SKSEUtil::deserializeFormID(json_value, form_id, mod_name))
 			return RE::TESDataHandler::GetSingleton()->LookupForm(form_id, mod_name);
+		else if (try_editor_id && json_value.isString())
+			return RE::TESForm::LookupByEditorID(json_value.asCString());
+
 		return NULL;
 	}
 
-	RE::TESForm* tryLookupFormIdString(const std::string& str) {
+	RE::TESForm* tryLookupFormIdString(const std::string& str, bool try_editor_id) {
 		RE::FormID form_id;
 		std::string mod_name;
 		if (SKSEUtil::deserializeFormIDString(str, form_id, mod_name))
 			return RE::TESDataHandler::GetSingleton()->LookupForm(form_id, mod_name);
+		else if (try_editor_id)
+			return RE::TESForm::LookupByEditorID(str);
 		return NULL;
 	}
 
@@ -138,4 +143,77 @@ namespace SKSEUtil {
 		SKSE::log::warn("Form Lookup Error: {}:{} :: {}", mod_name, SKSEUtil::hexToString(form_id), error);
 	}
 
+	//FormID Cooldown Map
+	FormIDCooldownMap::FormIDCooldownMap()
+		: cooldown(1.0) {}
+
+	bool FormIDCooldownMap::empty() const { return map.empty(); }
+	
+	bool FormIDCooldownMap::applyCooldown(RE::FormID form_id, float time) {
+		if (cooldown == 0.0f)
+			return true;
+
+		MapType::iterator it = map.find(form_id);
+		if (it != map.end()) {
+			bool was_in_cooldown = cooldown < 0.0f || (time - it->second) < cooldown;
+			it->second = time;
+			return !was_in_cooldown;
+		}
+		map[form_id] = time;
+		return true;
+	}
+
+	bool FormIDCooldownMap::isInCooldown(RE::FormID form_id, float time) {
+		MapType::iterator it = map.find(form_id);
+		if (it != map.end()) {
+			if (cooldown < 0.0f || (time - it->second) < cooldown)
+				return true;
+			else {
+				//Cooldown elapsed so remove the iterator
+				map.erase(it);
+				return false;
+			}
+		}
+		return false;
+	}
+
+	std::size_t FormIDCooldownMap::clean(float time) {
+		if (cooldown < 0.0f)
+			return 0u;
+
+		if (cooldown == 0.0f) {
+			std::size_t prev_size = map.size();
+			map.clear();
+			return prev_size;
+		}
+
+		std::vector<RE::FormID> to_delete;
+		for (MapType::iterator it = map.begin(); it != map.end(); ++it) {
+			if ((time - it->second) >= cooldown)
+				to_delete.push_back(it->first);
+		}
+
+		for (std::size_t i = 0u; i < to_delete.size(); i++)
+			map.erase(to_delete[i]);
+
+		return to_delete.size();
+	}
+	
+	void FormIDCooldownMap::serializeJson(SKSE::SerializationInterface*, Json::Value& json_value) {
+		for (MapType::iterator it = map.begin(); it != map.end(); ++it)
+			json_value[SKSEUtil::hexToString(static_cast<unsigned int>(it->first))] = it->second;
+	}
+
+	bool FormIDCooldownMap::deserializeJson(SKSE::SerializationInterface* serde, const Json::Value& json_value) {
+		map.clear();
+		if (!json_value.isObject())
+			return false;
+
+		for (Json::ValueConstIterator it = json_value.begin(); it != json_value.end(); ++it) {
+			RE::FormID form_id = SKSEUtil::stringToHex(it.key().asCString());
+			if (!serde || serde->ResolveFormID(form_id, form_id))
+				map[form_id] = it->asFloat();
+		}
+		return true;
+	}
 }
