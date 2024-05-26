@@ -205,19 +205,6 @@ namespace SKSEUtil
 			AddFormKeywords((*it)->As<BGSKeywordForm>(), keywords_out);
 	}
 
-	//Keywords
-	void AddFormKeywords(RE::BGSKeywordForm* form, KeywordSet* keywords_out)
-	{
-		if (!form)
-			return;
-
-		for (uint32_t i = 0u; i < form->numKeywords; i++) {
-			if (!form->keywords[i])
-				continue;
-			keywords_out->insert(form->keywords[i]);
-		}
-	}
-
 	//Factions
 
 	int8_t GetFactionRank(RE::Actor* a, TESFaction* faction) {
