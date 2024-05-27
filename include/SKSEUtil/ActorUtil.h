@@ -41,6 +41,10 @@ namespace SKSEUtil
 	//Equips
 	int32_t GetWornForms(RE::Actor* a, FormSet* forms_out, KeywordSet* keywords_out=NULL);
 	void GetWornKeywords(FormSet& worn_forms, KeywordSet* keywords_out);
+
+	//Magic
+	RE::MagicItem* GetEquippedSpell(RE::Actor* a, RE::MagicSystem::CastingSource source);
+	RE::TESShout* GetEquippedShout(RE::Actor* a);
 	
 	//Factions
 	typedef std::map<RE::TESFaction*, int8_t> FactionRankMap;
@@ -53,8 +57,7 @@ namespace SKSEUtil
 	void GetFactionRanks(RE::Actor* a, FactionRankMap* faction_ranks_out);
 
 	//Relationships
-	RE::BGSRelationship::RELATIONSHIP_LEVEL GetRelationshipRank(RE::Actor* a, RE::Actor* target);
-	int GetRelationshipRankInt(RE::BGSRelationship::RELATIONSHIP_LEVEL level);
+	RE::BGSRelationship::RELATIONSHIP_LEVEL GetRelationshipLevel(RE::Actor* a, RE::Actor* target);
 
 	//Skeleton
 	RE::BSFixedString* GetActorSkeleton(RE::Actor* a);

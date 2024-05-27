@@ -205,6 +205,28 @@ namespace SKSEUtil
 			AddFormKeywords((*it)->As<BGSKeywordForm>(), keywords_out);
 	}
 
+	//Magic
+	RE::MagicItem* GetEquippedSpell(RE::Actor* a, RE::MagicSystem::CastingSource source) {
+		if (!a)
+			return NULL;
+
+		if (source == RE::MagicSystem::CastingSource::kInstant) {
+			if (a->GetActorRuntimeData().selectedPower)
+				return a->GetActorRuntimeData().selectedPower->As<RE::MagicItem>();
+			else
+				return NULL;
+		}
+		else
+			return a->GetActorRuntimeData().selectedSpells[static_cast<unsigned int>(source)];
+	}
+
+	RE::TESShout* GetEquippedShout(RE::Actor* a) {
+		if (!a || !a->GetActorRuntimeData().selectedPower)
+			return NULL;
+
+		return a->GetActorRuntimeData().selectedPower->As<RE::TESShout>();
+	}
+
 	//Factions
 
 	int8_t GetFactionRank(RE::Actor* a, TESFaction* faction) {
@@ -320,47 +342,9 @@ namespace SKSEUtil
 	}
 
 	//Relationships
-	RE::BGSRelationship::RELATIONSHIP_LEVEL GetRelationshipRank(RE::Actor* a, RE::Actor* target) {
-		if (!a || !target)
-			return RE::BGSRelationship::RELATIONSHIP_LEVEL::kAcquaintance;
-
-		TESNPC* ab = a->GetActorBase();
-		TESNPC* target_ab = target->GetActorBase();
-
-		if (ab->relationships) {
-			for (unsigned int i = 0u; i < ab->relationships->size(); i++) {
-				BGSRelationship* relation = (*ab->relationships)[i];
-				if (relation && (relation->npc1 == target_ab || relation->npc2 == target_ab))
-					return static_cast<RE::BGSRelationship::RELATIONSHIP_LEVEL>(relation->level.underlying());
-			}
-		}
-
-		return RE::BGSRelationship::RELATIONSHIP_LEVEL::kAcquaintance;
-	}
-
-	int GetRelationshipRankInt(RE::BGSRelationship::RELATIONSHIP_LEVEL level) {
-		switch (level) {
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kArchnemesis:
-			return -4;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kEnemy:
-			return -3;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kFoe:
-			return -2;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kRival:
-			return -1;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kAcquaintance:
-			return 0;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kFriend:
-			return 1;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kConfidant:
-			return 2;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kAlly:
-			return 3;
-		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kLover:
-			return 4;
-		default:
-			return 0;
-		}
+	RE::BGSRelationship::RELATIONSHIP_LEVEL GetRelationshipLevel(RE::Actor* a, RE::Actor* target) {
+		REL::Relocation<int32_t(RE::TESNPC*, RE::TESNPC*)> func{ REL::VariantID(23624, 24076, 0x355790) };
+		return static_cast<RE::BGSRelationship::RELATIONSHIP_LEVEL>(func(a->GetActorBase(), target->GetActorBase()));
 	}
 
 	//Skeleton
