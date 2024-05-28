@@ -12,4 +12,7 @@ namespace SKSEUtil
 	void AddFormKeywords(RE::BGSKeywordForm* form, KeywordSet* keywords_out);
 	bool LocationHasKeyword(RE::BGSLocation* location, RE::BGSKeyword* keyword);
 
+	bool WeatherIsRain(RE::TESWeather* weather);
+	bool WeatherIsSnow(RE::TESWeather* weather);
+
 }

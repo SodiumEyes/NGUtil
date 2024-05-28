@@ -28,4 +28,16 @@ namespace SKSEUtil {
 		return false;
 	}
 
+#define PARTICLE_TYPE_INDEX static_cast<uint32_t>(RE::BGSShaderParticleGeometryData::DataID::kParticleType)
+
+	bool WeatherIsRain(RE::TESWeather* weather) {
+		return weather && weather->precipitationData
+			&& weather->precipitationData->data[PARTICLE_TYPE_INDEX].i == static_cast<uint32_t>(RE::BGSShaderParticleGeometryData::ParticleType::kRain);
+	}
+
+	bool WeatherIsSnow(RE::TESWeather* weather) {
+		return weather && weather->precipitationData
+			&& weather->precipitationData->data[PARTICLE_TYPE_INDEX].i == static_cast<uint32_t>(RE::BGSShaderParticleGeometryData::ParticleType::kSnow);
+	}
+
 }
