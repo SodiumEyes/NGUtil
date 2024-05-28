@@ -67,11 +67,17 @@ namespace SKSEUtil {
 			RE::TESFile* file = getFileByName(mod_name_out);
 			if (file && mod_name_out != file->fileName) //Correct casing of the mod filename
 				mod_name_out = file->fileName;
-			form_id_out = trimFileFromFormID(stringToHex(form_id_str), file && file->IsLight());
+			unsigned int form_id;
+			if (!stringToHex(form_id_str, &form_id))
+				return false;
+			form_id_out = trimFileFromFormID(form_id, file && file->IsLight());
 			return true;
 		}
 		else if (!mod_name_out.empty()) {
-			form_id_out = trimFileFromFormID(stringToHex(str));
+			unsigned int form_id;
+			if (!stringToHex(str, &form_id))
+				return false;
+			form_id_out = trimFileFromFormID(form_id);
 			return true;
 		}
 		return false;

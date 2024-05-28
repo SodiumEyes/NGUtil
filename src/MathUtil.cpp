@@ -16,6 +16,25 @@ namespace SKSEUtil
 		return hex;
 	}
 
+	bool stringToHex(const std::string& value, unsigned int* out) {
+		//Verify that all the characters are valid hexidecmal
+		for (std::string::size_type i = 0u; i < value.size(); i++) {
+			switch (value.at(i)) {
+			case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
+			case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
+			case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+			case ' ': case '\n': case '\t':
+				continue;
+			default:
+				return false;
+			}
+		}
+
+		if (out)
+			*out = stringToHex(value);
+		return true;
+	}
+
 	float smartModf(float dividend, float divisor)
 	{
 		if (dividend < 0.0f)

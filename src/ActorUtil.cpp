@@ -343,7 +343,7 @@ namespace SKSEUtil
 
 	//Relationships
 	RE::BGSRelationship::RELATIONSHIP_LEVEL GetRelationshipLevel(RE::Actor* a, RE::Actor* target) {
-		REL::Relocation<int32_t(RE::TESNPC*, RE::TESNPC*)> func{ REL::VariantID(23624, 24076, 0x355790) };
+		static REL::Relocation<int32_t(RE::TESNPC*, RE::TESNPC*)> func{ REL::VariantID(23624, 24076, 0x355790) };
 		return static_cast<RE::BGSRelationship::RELATIONSHIP_LEVEL>(func(a->GetActorBase(), target->GetActorBase()));
 	}
 
@@ -388,5 +388,19 @@ namespace SKSEUtil
 			bool temp;
 			return a->HasLineOfSight(target, temp);
 		}
+	}
+
+	bool IsInDialogue(RE::Actor* a) {
+		if (!a)
+			return false;
+		static REL::Relocation<bool(RE::Actor*)> func{ REL::VariantID(36727, 37739, 0x604230) };
+		return func(a);
+	}
+
+	RE::ACTOR_COMBAT_STATE GetCombatState(RE::Actor* a) {
+		if (!a)
+			return RE::ACTOR_COMBAT_STATE::kNone;
+		static REL::Relocation<RE::ACTOR_COMBAT_STATE(RE::Actor*)> func{ REL::VariantID(37603, 38556, 0x62DD00) };
+		return func(a);
 	}
 }

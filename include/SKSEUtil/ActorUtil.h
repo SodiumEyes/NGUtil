@@ -68,5 +68,7 @@ namespace SKSEUtil
 	//
 	RE::Actor* GetKiller(RE::Actor* a);
 	bool HasLineOfSight(RE::Actor* a, RE::TESObjectREFR* target, bool* a_arg2 = NULL);
+	bool IsInDialogue(RE::Actor* a);
+	RE::ACTOR_COMBAT_STATE GetCombatState(RE::Actor* a);
 	
 }

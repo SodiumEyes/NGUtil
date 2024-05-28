@@ -8,6 +8,7 @@ namespace SKSEUtil
 {
 	std::string hexToString(unsigned int value);
 	unsigned int stringToHex(const std::string& value);
+	bool stringToHex(const std::string& value, unsigned int* out);
 
 	float smartModf(float dividend, float divisor);
 	float radiansToDegrees(float radians);
