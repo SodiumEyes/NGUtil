@@ -82,6 +82,27 @@ namespace SKSEUtil {
 		}
 	}
 
+	std::string KnockedStateName(RE::KNOCK_STATE_ENUM state) {
+		switch (state) {
+		case RE::KNOCK_STATE_ENUM::kNormal:
+			return "Normal";
+		case RE::KNOCK_STATE_ENUM::kQueued:
+			return "Queued";
+		case RE::KNOCK_STATE_ENUM::kGetUp:
+			return "GetUp";
+		case RE::KNOCK_STATE_ENUM::kExplode:
+		case RE::KNOCK_STATE_ENUM::kExplodeLeadIn:
+			return "Explode";
+		case RE::KNOCK_STATE_ENUM::kOut:
+		case RE::KNOCK_STATE_ENUM::kOutLeadIn:
+			return "Out";
+		case RE::KNOCK_STATE_ENUM::kDown:
+			return "Down";
+		default:
+			return std::string();
+		}
+	}
+
 	int32_t RelationshipLevelToRank(RE::BGSRelationship::RELATIONSHIP_LEVEL level) {
 		switch (level) {
 		case RE::BGSRelationship::RELATIONSHIP_LEVEL::kArchnemesis:
